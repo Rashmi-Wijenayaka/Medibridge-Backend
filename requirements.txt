@@ -4,6 +4,10 @@ Tensorflow
 django>=4.0
 djangorestframework
 django-cors-headers
+python-dotenv
+dj-database-url
+psycopg2-binary
+whitenoise
 reportlab
 channels
 daphne
