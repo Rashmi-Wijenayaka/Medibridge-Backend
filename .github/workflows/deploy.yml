@@ -1,4 +1,4 @@
-name: Backend CI/CD
+name: Backend CI (Railway)
 
 on:
   pull_request:
@@ -6,22 +6,22 @@ on:
   push:
     branches: [main]
 
+concurrency:
+  group: backend-ci-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   PYTHON_VERSION: "3.11"
 
 jobs:
-  build-and-test:
+  test:
     runs-on: ubuntu-latest
-    # Remove this block if your repo is backend-only
-    defaults:
-      run:
-        working-directory: backend
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
@@ -30,7 +30,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
 
@@ -40,19 +40,33 @@ jobs:
           pip install -r requirements.txt
 
       - name: Django checks
+        env:
+          SECRET_KEY: ci-temp-secret-key
+          DEBUG: "False"
+          ALLOWED_HOSTS: localhost,127.0.0.1
+          DATABASE_URL: sqlite:///db.sqlite3
         run: python manage.py check
 
       - name: Run migrations
+        env:
+          SECRET_KEY: ci-temp-secret-key
+          DEBUG: "False"
+          ALLOWED_HOSTS: localhost,127.0.0.1
+          DATABASE_URL: sqlite:///db.sqlite3
         run: python manage.py migrate --noinput
 
       - name: Run tests
+        env:
+          SECRET_KEY: ci-temp-secret-key
+          DEBUG: "False"
+          ALLOWED_HOSTS: localhost,127.0.0.1
+          DATABASE_URL: sqlite:///db.sqlite3
         run: python manage.py test
 
-  deploy:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-
-    steps:
-      - name: Trigger Render deploy hook
-        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+      - name: Collect static
+        env:
+          SECRET_KEY: ci-temp-secret-key
+          DEBUG: "False"
+          ALLOWED_HOSTS: localhost,127.0.0.1
+          DATABASE_URL: sqlite:///db.sqlite3
+        run: python manage.py collectstatic --noinput
