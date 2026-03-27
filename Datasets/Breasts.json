@@ -1,0 +1,222 @@
+{
+  "ourIntents": [
+   
+    {
+      "tag": "at_what_age_did_you_have_your_first_menstruation",
+      "patterns": [
+        "At what age did you have your first menstruation?"
+      ],
+      "responses": [
+        "Before 12",
+        "12-14",
+        "15-16",
+        "Above 16"
+      ]
+    },
+    {
+      "tag": "do_you_have_a_regular_menstrual_cycle",
+      "patterns": [
+        "Do you have a regular menstrual cycle?"
+      ],
+      "responses": [
+        "Yes",
+        "No",
+        "Irregular",
+        "Not sure"
+      ]
+    },
+   
+    {
+      "tag": "do_you_have_a_history_of_breast_disease",
+      "patterns": [
+        "Do you have a history of breast disease?"
+      ],
+      "responses": [
+        "Yes",
+        "No",
+        "Not sure",
+        "Not applicable"
+      ]
+    },
+    {
+      "tag": "have_you_ever_had_breast_surgery",
+      "patterns": [
+        "Have you ever had breast surgery?"
+      ],
+      "responses": [
+        "Yes",
+        "No",
+        "Not sure",
+        "Not applicable"
+      ]
+    },
+ 
+    
+    {
+      "tag": "have_you_ever_used_birth_control_pills",
+      "patterns": [
+        "Have you ever used birth control pills?"
+      ],
+      "responses": [
+        "Yes. for more than 5 years",
+        "Yes. less than 5 years",
+        "No",
+        "Not sure"
+      ]
+    },
+    {
+      "tag": "have_you_had_children",
+      "patterns": [
+        "Have you had children?"
+      ],
+      "responses": [
+        "Yes. more than 2",
+        "Yes. 1-2",
+        "No",
+        "Not Applicable"
+      ]
+    },
+   
+    {
+      "tag": "are_you_currently_breastfeeding",
+      "patterns": [
+        "Are you currently breastfeeding?"
+      ],
+      "responses": [
+        "Yes",
+        "No",
+        "Not Applicable",
+        "Not Sure"
+      ]
+    },
+    {
+      "tag": "do_you_experience_breast_pain",
+      "patterns": [
+        "Do you experience breast pain?"
+      ],
+      "responses": [
+        "Yes",
+        "No",
+        "Occasionally",
+        "Not sure"
+      ]
+    },
+    {
+      "tag": "when_performing_a_self-exam._have_you_detected_any_unusual_changes_or_lumps",
+      "patterns": [
+        "When performing a self-exam. have you detected any unusual changes or lumps?"
+      ],
+      "responses": [
+        "Yes",
+        "No",
+        "Not sure",
+        "Occasionally"
+      ]
+    },
+    {
+      "tag": "have_you_ever_felt_pain_or_tenderness_in_your_breast_during_self-examination",
+      "patterns": [
+        "Have you ever felt pain or tenderness in your breast during self-examination?"
+      ],
+      "responses": [
+        "Yes",
+        "No",
+        "Occasionally",
+        "Not sure"
+      ]
+    },
+    {
+      "tag": "have_you_noticed_any_change_in_the_size_of_your_breasts",
+      "patterns": [
+        "Have you noticed any change in the size of your breasts?"
+      ],
+      "responses": [
+        "Yes. significant change",
+        "Yes. minor change",
+        "No",
+        "Not sure"
+      ]
+    },
+    
+    {
+      "tag": "have_you_experienced_any_redness_or_rash_on_your_breast",
+      "patterns": [
+        "Have you experienced any redness or rash on your breast?"
+      ],
+      "responses": [
+        "Yes. persistent",
+        "Yes. occasional",
+        "No",
+        "Not sure"
+      ]
+    },
+    
+    {
+      "tag": "do_you_get_sufficient_exposure_to_sunlight",
+      "patterns": [
+        "Do you get sufficient exposure to sunlight?"
+      ],
+      "responses": [
+        "Yes",
+        "No",
+        "Occasionally",
+        "Not sure"
+      ]
+    },
+    {
+      "tag": "do_you_take_vitamin_d_supplements",
+      "patterns": [
+        "Do you take vitamin D supplements?"
+      ],
+      "responses": [
+        "Yes",
+        "No",
+        "Occasionally",
+        "Not applicable"
+      ]
+    },
+    {
+      "tag": "how_often_do_you_visit_a_doctor_for_general_health_check-ups",
+      "patterns": [
+        "How often do you visit a doctor for general health check-ups?"
+      ],
+      "responses": [
+        "Annually",
+        "Every 2-3 years",
+        "Occasionally",
+        "Never"
+      ]
+    },
+   
+    
+
+   
+   
+{
+      "tag": "how_many_hours_do_you_sleep_per_night",
+      "patterns": [
+        "How many hours do you sleep per night?"
+      ],
+      "responses": [
+        "Less than 5 hours",
+        "5-7 hours",
+        "7-9 hours",
+        "More than 9 hours"
+      ]
+    },
+    {
+      "tag": "do_you_have_a_balanced_diet",
+      "patterns": [
+        "Do you have a balanced diet?"
+      ],
+      "responses": [
+        "Yes",
+        "Occasionally",
+        "No",
+        "Not sure"
+      ]
+    }
+   
+   
+  ]
+}

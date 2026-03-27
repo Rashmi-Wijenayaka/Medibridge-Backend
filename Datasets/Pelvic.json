@@ -1,0 +1,148 @@
+{
+  "ourIntents": [
+    {
+      "tag": "experience_pelvic_pain",
+      "patterns": [
+        "Do you experience chronic pelvic pain?"
+      ],
+      "responses": [
+        "Yes, daily",
+        "Yes, during menstruation",
+        "Occasionally",
+        "No"
+      ]
+    },
+    {
+      "tag": "pain_severity_during_intercourse",
+      "patterns": [
+        "Do you experience pain during or after sexual intercourse?"
+      ],
+      "responses": [
+        "Yes, frequently",
+        "Occasionally",
+        "No",
+        "Not applicable"
+      ]
+    },
+    {
+      "tag": "abnormal_vaginal_discharge",
+      "patterns": [
+        "Have you noticed any unusual vaginal discharge?"
+      ],
+      "responses": [
+        "Yes, in color or odor",
+        "Yes, in consistency",
+        "No",
+        "Not sure"
+      ]
+    },
+    {
+      "tag": "urinary_frequency_changes",
+      "patterns": [
+        "Have you noticed a significant increase in the frequency of urination?"
+      ],
+      "responses": [
+        "Yes, significantly",
+        "Slightly",
+        "No",
+        "Only at night"
+      ]
+    },
+    {
+      "tag": "history_of_stis",
+      "patterns": [
+        "Do you have a history of sexually transmitted infections (STIs)?"
+      ],
+      "responses": [
+        "Yes",
+        "No",
+        "Prefer not to say",
+        "Not sure"
+      ]
+    },
+    {
+      "tag": "pelvic_heaviness_or_pressure",
+      "patterns": [
+        "Do you feel a sensation of heaviness or pressure in your lower abdomen?"
+      ],
+      "responses": [
+        "Yes, constant",
+        "Yes, intermittent",
+        "No",
+        "Not sure"
+      ]
+    },
+    {
+      "tag": "irregular_bleeding_between_periods",
+      "patterns": [
+        "Do you experience bleeding or spotting between your menstrual periods?"
+      ],
+      "responses": [
+        "Yes, frequently",
+        "Occasionally",
+        "No",
+        "Not applicable"
+      ]
+    },
+    {
+      "tag": "family_history_ovarian_cervical_cancer",
+      "patterns": [
+        "Is there a family history of ovarian or cervical cancer?"
+      ],
+      "responses": [
+        "Yes, immediate family",
+        "Yes, extended family",
+        "No",
+        "Don't know"
+      ]
+    },
+    {
+      "tag": "history_of_pcos_or_endometriosis",
+      "patterns": [
+        "Have you been previously diagnosed with PCOS or Endometriosis?"
+      ],
+      "responses": [
+        "Yes, PCOS",
+        "Yes, Endometriosis",
+        "No",
+        "Under investigation"
+      ]
+    },
+    {
+      "tag": "bloating_and_abdominal_distension",
+      "patterns": [
+        "Do you experience persistent bloating or visible abdominal swelling?"
+      ],
+      "responses": [
+        "Yes, almost daily",
+        "Occasionally",
+        "No",
+        "Related to diet"
+      ]
+    },
+    {
+      "tag": "last_pap_smear_screening",
+      "patterns": [
+        "When was your last Pap smear or cervical screening?"
+      ],
+      "responses": [
+        "Within the last year",
+        "1-3 years ago",
+        "More than 3 years ago",
+        "Never"
+      ]
+    },
+    {
+      "tag": "bowel_habit_changes_related_to_pelvis",
+      "patterns": [
+        "Have you noticed changes in bowel habits, such as constipation or pain during bowel movements?"
+      ],
+      "responses": [
+        "Yes, frequently",
+        "Occasionally",
+        "No",
+        "Not sure"
+      ]
+    }
+  ]
+}

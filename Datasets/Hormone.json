@@ -1,0 +1,124 @@
+{
+  "ourIntents": [
+    {
+      "tag": "unexplained_weight_changes",
+      "patterns": [
+        "Have you experienced sudden weight gain or loss despite no change in diet?"
+      ],
+      "responses": [
+        "Yes, significant gain",
+        "Yes, significant loss",
+        "Fluctuating",
+        "No"
+      ]
+    },
+    {
+      "tag": "hirsutism_excess_hair_growth",
+      "patterns": [
+        "Have you noticed excess hair growth on your face, chest, or back?"
+      ],
+      "responses": [
+        "Yes, noticeably",
+        "Slightly",
+        "No",
+        "Not sure"
+      ]
+    },
+    {
+      "tag": "temperature_intolerance",
+      "patterns": [
+        "Do you feel unusually sensitive to heat or cold compared to others?"
+      ],
+      "responses": [
+        "Extremely sensitive to cold",
+        "Extremely sensitive to heat",
+        "Both",
+        "No"
+      ]
+    },
+    {
+      "tag": "mood_swings_and_anxiety",
+      "patterns": [
+        "Do you experience severe mood shifts, irritability, or anxiety linked to your cycle?"
+      ],
+      "responses": [
+        "Yes, severe (PMDD symptoms)",
+        "Yes, moderate (PMS)",
+        "Occasionally",
+        "No"
+      ]
+    },
+    {
+      "tag": "skin_changes_acne",
+      "patterns": [
+        "Do you have persistent adult acne, especially along the jawline?"
+      ],
+      "responses": [
+        "Yes, cystic/painful",
+        "Occasionally around periods",
+        "No",
+        "Not sure"
+      ]
+    },
+    {
+      "tag": "insomnia_and_night_sweats",
+      "patterns": [
+        "Do you struggle with sleep due to night sweats or hot flashes?"
+      ],
+      "responses": [
+        "Yes, frequently",
+        "Only before my period",
+        "Occasionally",
+        "No"
+      ]
+    },
+    {
+      "tag": "libido_and_sexual_desire",
+      "patterns": [
+        "Have you noticed a significant decrease in your sexual desire?"
+      ],
+      "responses": [
+        "Yes, a major change",
+        "Slightly",
+        "No",
+        "Not sure"
+      ]
+    },
+    {
+      "tag": "fatigue_and_energy_levels",
+      "patterns": [
+        "How would you describe your energy levels throughout the day?"
+      ],
+      "responses": [
+        "Always exhausted (Chronic)",
+        "Tired in the afternoon",
+        "Normal",
+        "Energetic"
+      ]
+    },
+    {
+      "tag": "irregular_menstrual_timing",
+      "patterns": [
+        "Are your periods consistently missing or very far apart (more than 35 days)?"
+      ],
+      "responses": [
+        "Yes, frequently",
+        "Rarely",
+        "No",
+        "Not applicable"
+      ]
+    },
+    {
+      "tag": "history_of_hormonal_medication",
+      "patterns": [
+        "Are you currently on Hormone Replacement Therapy (HRT) or thyroid medication?"
+      ],
+      "responses": [
+        "Yes, HRT",
+        "Yes, Thyroid meds",
+        "Yes, both",
+        "No"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "ourIntents": [
+    {
+      "tag": "migraine_menstrual_cycle_link",
+      "patterns": [
+        "Do your headaches correlate with your menstrual cycle (before, during, or after)?"
+      ],
+      "responses": [
+        "Yes, consistently",
+        "Occasionally",
+        "No",
+        "Not applicable (Post-menopausal/Other)"
+      ]
+    },
+    {
+      "tag": "hormonal_contraceptive_impact",
+      "patterns": [
+        "Have you noticed changes in headache frequency since starting or changing birth control?"
+      ],
+      "responses": [
+        "Yes, they increased",
+        "Yes, they decreased",
+        "No change",
+        "Not using hormonal birth control"
+      ]
+    },
+    {
+      "tag": "pregnancy_related_head_pain",
+      "patterns": [
+        "Are you currently pregnant and experiencing new or worsening headaches?"
+      ],
+      "responses": [
+        "Yes, first trimester",
+        "Yes, second or third trimester",
+        "No",
+        "Not applicable"
+      ]
+    },
+    {
+      "tag": "menopause_symptom_overlap",
+      "patterns": [
+        "Do you experience 'brain fog' or headaches alongside hot flashes or night sweats?"
+      ],
+      "responses": [
+        "Yes, frequently",
+        "Occasionally",
+        "No",
+        "Not sure"
+      ]
+    },
+    {
+      "tag": "iron_deficiency_dizziness",
+      "patterns": [
+        "Do you experience lightheadedness or dizziness, especially during your period?"
+      ],
+      "responses": [
+        "Yes, frequently",
+        "Occasionally",
+        "No",
+        "Not sure"
+      ]
+    },
+    {
+      "tag": "hair_loss_and_scalp_tenderness",
+      "patterns": [
+        "Have you noticed unusual hair thinning or a tender, painful scalp?"
+      ],
+      "responses": [
+        "Yes, both",
+        "Only hair thinning",
+        "Only scalp tenderness",
+        "No"
+      ]
+    },
+    {
+      "tag": "tmj_jaw_pain",
+      "patterns": [
+        "Do you experience pain in your jaw or clicking sounds when opening your mouth?"
+      ],
+      "responses": [
+        "Yes, with headaches",
+        "Yes, without headaches",
+        "Occasionally",
+        "No"
+      ]
+    },
+    {
+      "tag": "thyroid_related_fatigue_fog",
+      "patterns": [
+        "Do you have a history of thyroid issues accompanied by persistent mental fatigue?"
+      ],
+      "responses": [
+        "Yes, Hypothyroidism",
+        "Yes, Hyperthyroidism",
+        "No",
+        "Not sure"
+      ]
+    },
+    {
+      "tag": "vision_changes_sensitivity",
+      "patterns": [
+        "Do you experience light sensitivity (photophobia) even without a headache?"
+      ],
+      "responses": [
+        "Yes, constantly",
+        "Occasionally",
+        "No",
+        "Only with screens"
+      ]
+    },
+    {
+      "tag": "posture_tension_neck_pain",
+      "patterns": [
+        "Does your head pain stem from tension in your neck or upper shoulders?"
+      ],
+      "responses": [
+        "Yes, daily",
+        "Often after work",
+        "No",
+        "Not sure"
+      ]
+    }
+  ]
+}

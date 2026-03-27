@@ -1,0 +1,124 @@
+{
+  "ourIntents": [
+    {
+      "tag": "hormonal_acne_patterns",
+      "patterns": [
+        "Does your acne flare up specifically during your menstrual cycle?"
+      ],
+      "responses": [
+        "Yes, consistently on the chin/jawline",
+        "Occasionally",
+        "No, it is constant",
+        "No, I don't have acne"
+      ]
+    },
+    {
+      "tag": "pigmentation_and_melasma",
+      "patterns": [
+        "Have you noticed dark, symmetrical patches on your face (Melasma)?"
+      ],
+      "responses": [
+        "Yes, appeared during pregnancy",
+        "Yes, after starting birth control",
+        "Yes, unrelated to hormones",
+        "No"
+      ]
+    },
+    {
+      "tag": "abnormal_mole_changes",
+      "patterns": [
+        "Have you noticed any moles changing in size, shape, or color?"
+      ],
+      "responses": [
+        "Yes, a specific mole is changing",
+        "I have many new moles",
+        "No changes noticed",
+        "Not sure"
+      ]
+    },
+    {
+      "tag": "skin_thinning_and_bruising",
+      "patterns": [
+        "Do you find that your skin is thinning or that you bruise very easily?"
+      ],
+      "responses": [
+        "Yes, significantly",
+        "Slightly",
+        "No",
+        "Not sure"
+      ]
+    },
+    {
+      "tag": "facial_redness_and_rosacea",
+      "patterns": [
+        "Do you experience persistent flushing or redness across the cheeks and nose?"
+      ],
+      "responses": [
+        "Yes, with visible blood vessels",
+        "Only after triggers (heat/alcohol)",
+        "No",
+        "Not sure"
+      ]
+    },
+    {
+      "tag": "unusual_hair_growth_hirsutism",
+      "patterns": [
+        "Is there new, coarse hair growth on the chin, upper lip, or chest?"
+      ],
+      "responses": [
+        "Yes, significant",
+        "Slightly",
+        "No",
+        "Not applicable"
+      ]
+    },
+    {
+      "tag": "skin_dryness_menopause",
+      "patterns": [
+        "Have you experienced extreme skin dryness or itching recently?"
+      ],
+      "responses": [
+        "Yes, especially since menopause",
+        "Yes, seasonally",
+        "No",
+        "Not sure"
+      ]
+    },
+    {
+      "tag": "autoimmune_rash_signs",
+      "patterns": [
+        "Do you have a 'butterfly' shaped rash across your face or sensitivity to sun?"
+      ],
+      "responses": [
+        "Yes, both",
+        "Only sun sensitivity",
+        "No",
+        "Not sure"
+      ]
+    },
+    {
+      "tag": "excessive_sweating_hyperhidrosis",
+      "patterns": [
+        "Do you experience excessive sweating even when not hot or exercising?"
+      ],
+      "responses": [
+        "Yes, underarms/palms",
+        "Yes, night sweats",
+        "No",
+        "Occasionally"
+      ]
+    },
+    {
+      "tag": "allergic_reactions_cosmetics",
+      "patterns": [
+        "Does your skin frequently react poorly to new skincare or makeup products?"
+      ],
+      "responses": [
+        "Yes, very sensitive",
+        "Occasionally",
+        "Rarely",
+        "No"
+      ]
+    }
+  ]
+}

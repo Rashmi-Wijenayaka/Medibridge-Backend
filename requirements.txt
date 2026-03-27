@@ -1,0 +1,16 @@
+numpy
+nltk
+Tensorflow
+django>=4.0
+djangorestframework
+django-cors-headers
+reportlab
+channels
+daphne
+channels-redis
+lightgbm
+scikit-learn
+pypdf
+python-docx
+Pillow
+pytesseract

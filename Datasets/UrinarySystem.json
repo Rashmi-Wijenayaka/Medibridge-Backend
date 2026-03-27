@@ -1,0 +1,148 @@
+{
+  "ourIntents": [
+    {
+      "tag": "urinary_frequency_day_night",
+      "patterns": [
+        "How many times do you urinate during a typical day?"
+      ],
+      "responses": [
+        "More than 10 times",
+        "7-10 times",
+        "4-6 times",
+        "Less than 4 times"
+      ]
+    },
+    {
+      "tag": "nocturia_night_waking",
+      "patterns": [
+        "How often do you wake up at night to urinate?"
+      ],
+      "responses": [
+        "3 or more times",
+        "1-2 times",
+        "Occasionally",
+        "Never"
+      ]
+    },
+    {
+      "tag": "urgency_and_leakage",
+      "patterns": [
+        "Do you experience a sudden, strong urge to urinate that is difficult to delay?"
+      ],
+      "responses": [
+        "Yes, often with leakage",
+        "Yes, without leakage",
+        "Occasionally",
+        "No"
+      ]
+    },
+    {
+      "tag": "stress_incontinence_triggers",
+      "patterns": [
+        "Do you leak urine when coughing, sneezing, laughing, or exercising?"
+      ],
+      "responses": [
+        "Yes, frequently",
+        "Only with heavy exertion",
+        "No",
+        "Not sure"
+      ]
+    },
+    {
+      "tag": "pain_or_burning_sensation",
+      "patterns": [
+        "Do you experience pain or a burning sensation during urination?"
+      ],
+      "responses": [
+        "Yes, currently",
+        "Frequently (Chronic)",
+        "Occasionally",
+        "No"
+      ]
+    },
+    {
+      "tag": "history_of_recurrent_utis",
+      "patterns": [
+        "How many urinary tract infections (UTIs) have you had in the past year?"
+      ],
+      "responses": [
+        "3 or more",
+        "1-2",
+        "None",
+        "Not sure"
+      ]
+    },
+    {
+      "tag": "incomplete_bladder_emptying",
+      "patterns": [
+        "Do you feel like your bladder is still full immediately after urinating?"
+      ],
+      "responses": [
+        "Yes, always",
+        "Frequently",
+        "Occasionally",
+        "No"
+      ]
+    },
+    {
+      "tag": "blood_in_urine_hematuria",
+      "patterns": [
+        "Have you ever noticed blood in your urine (pink, red, or tea-colored)?"
+      ],
+      "responses": [
+        "Yes, recently",
+        "Yes, in the past",
+        "No",
+        "Not sure"
+      ]
+    },
+    {
+      "tag": "pelvic_organ_prolapse_sensation",
+      "patterns": [
+        "Do you feel a bulge or pressure in the vaginal area, as if something is dropping?"
+      ],
+      "responses": [
+        "Yes, constant",
+        "Yes, after standing a long time",
+        "No",
+        "Not sure"
+      ]
+    },
+    {
+      "tag": "bladder_pain_interstitial_cystitis",
+      "patterns": [
+        "Do you experience pain that gets worse as the bladder fills and improves after urinating?"
+      ],
+      "responses": [
+        "Yes, significantly",
+        "Slightly",
+        "No",
+        "Only during menstruation"
+      ]
+    },
+    {
+      "tag": "fluid_intake_habits",
+      "patterns": [
+        "Do you consume high amounts of caffeine, alcohol, or carbonated drinks?"
+      ],
+      "responses": [
+        "Yes, daily",
+        "Occasionally",
+        "No",
+        "Trying to reduce"
+      ]
+    },
+    {
+      "tag": "history_of_pelvic_surgery_or_childbirth",
+      "patterns": [
+        "Have you had any pelvic surgeries or vaginal deliveries?"
+      ],
+      "responses": [
+        "Yes, multiple vaginal births",
+        "Yes, pelvic surgery (e.g., hysterectomy)",
+        "No",
+        "Not applicable"
+      ]
+    }
+  ]
+}
