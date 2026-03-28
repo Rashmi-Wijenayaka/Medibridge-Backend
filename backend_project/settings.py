@@ -97,7 +97,7 @@ else:
 
 # Email settings (free method)
 # Use SMTP credentials from environment variables.
-EMAIL_DELIVERY_PROVIDER = os.getenv('EMAIL_DELIVERY_PROVIDER', 'smtp').strip().lower()
+EMAIL_DELIVERY_PROVIDER = os.getenv('EMAIL_DELIVERY_PROVIDER', 'auto').strip().lower()
 
 EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
 EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
@@ -114,6 +114,10 @@ RESEND_API_KEY = os.getenv('RESEND_API_KEY', '').strip()
 RESEND_API_URL = os.getenv('RESEND_API_URL', 'https://api.resend.com/emails').strip()
 RESEND_FROM_EMAIL = os.getenv('RESEND_FROM_EMAIL', DEFAULT_FROM_EMAIL).strip()
 RESEND_TIMEOUT = int(os.getenv('RESEND_TIMEOUT', '15'))
+
+# Auto-select provider to reduce configuration mistakes in production.
+if EMAIL_DELIVERY_PROVIDER == 'auto':
+    EMAIL_DELIVERY_PROVIDER = 'resend' if RESEND_API_KEY else 'smtp'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
