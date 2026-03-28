@@ -67,8 +67,8 @@ class LoginView(APIView):
         password = request.data.get('password') or ''
         if not username or not password:
             return Response({'error': 'unique_id and password are required'}, status=status.HTTP_400_BAD_REQUEST)
-        user = authenticate(username=username, password=password)
-        if user:
+        user = User.objects.filter(username=username).order_by('-id').first()
+        if user and user.check_password(password):
             token, created = Token.objects.get_or_create(user=user)
             return Response({
                 'token': token.key,
