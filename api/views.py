@@ -776,19 +776,63 @@ class GeneratePDFView(APIView):
 class SendEmailView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @staticmethod
+    def _normalize_name(value):
+        return re.sub(r'\s+', ' ', (value or '')).strip().lower()
+
+    @staticmethod
+    def _normalize_phone(value):
+        return re.sub(r'\s+', '', (value or ''))
+
+    def _resolve_recipient_email(self, patient):
+        """
+        Pick the best recipient email across potentially duplicated patient rows.
+        Priority:
+        1) Any linked user email from this/related rows
+        2) Latest non-empty patient.email from related rows
+        3) Current patient email fallback
+        """
+        related_qs = Patient.objects.none()
+
+        if getattr(patient, 'user_id', None):
+            related_qs = Patient.objects.filter(user_id=patient.user_id).order_by('-created_at')
+        else:
+            normalized_name = self._normalize_name(patient.full_name)
+            normalized_phone = self._normalize_phone(patient.phone_number)
+            if normalized_name:
+                related_qs = Patient.objects.filter(full_name__iexact=patient.full_name).order_by('-created_at')
+                if normalized_phone:
+                    related_qs = related_qs.filter(phone_number__icontains=normalized_phone)
+
+        for p in related_qs:
+            if getattr(p, 'user', None) and (p.user.email or '').strip():
+                return p.user.email.strip(), p
+
+        for p in related_qs:
+            if (p.email or '').strip():
+                return p.email.strip(), p
+
+        if getattr(patient, 'user', None) and (patient.user.email or '').strip():
+            return patient.user.email.strip(), patient
+
+        return (patient.email or '').strip(), patient
+
     def post(self, request, diagnosis_id):
         diagnosis = get_object_or_404(Diagnosis, id=diagnosis_id)
         if request.user.role != 'admin':
             return Response({'error': 'Only admins can send emails'}, status=status.HTTP_403_FORBIDDEN)
 
         patient = diagnosis.patient
-        recipient_email = (patient.email or '').strip()
-        if not recipient_email and getattr(patient, 'user', None):
-            recipient_email = (patient.user.email or '').strip()
+        recipient_email, source_patient = self._resolve_recipient_email(patient)
 
         if not recipient_email:
             logger.warning('SendEmailView skipped for diagnosis %s: no patient/user email', diagnosis_id)
             return Response({'error': 'Patient email is not available for this diagnosis.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Keep diagnosis patient row in sync for future sends and UI consistency.
+        if (patient.email or '').strip().lower() != recipient_email.lower():
+            patient.email = recipient_email
+            patient.save(update_fields=['email'])
 
         admin_name = request.user.first_name or request.user.username
         summary_text = _clean_clue_summary_text(diagnosis.admin_notes)
@@ -805,7 +849,11 @@ class SendEmailView(APIView):
             return Response({'error': 'Failed to send email notification to patient.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         logger.info('Diagnosis email sent for diagnosis %s to %s', diagnosis_id, recipient_email)
-        return Response({'message': 'Patient email notification sent successfully'})
+        return Response({
+            'message': 'Patient email notification sent successfully',
+            'recipient_email': recipient_email,
+            'recipient_patient_id': source_patient.id,
+        })
 
 
 class GenerateSummaryPDFView(APIView):
