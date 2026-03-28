@@ -782,7 +782,12 @@ class SendEmailView(APIView):
             return Response({'error': 'Only admins can send emails'}, status=status.HTTP_403_FORBIDDEN)
 
         patient = diagnosis.patient
-        if not patient.email:
+        recipient_email = (patient.email or '').strip()
+        if not recipient_email and getattr(patient, 'user', None):
+            recipient_email = (patient.user.email or '').strip()
+
+        if not recipient_email:
+            logger.warning('SendEmailView skipped for diagnosis %s: no patient/user email', diagnosis_id)
             return Response({'error': 'Patient email is not available for this diagnosis.'}, status=status.HTTP_400_BAD_REQUEST)
 
         admin_name = request.user.first_name or request.user.username
@@ -793,10 +798,13 @@ class SendEmailView(APIView):
             f"Log in to your medical chat to view your full results."
         )
 
+        logger.info('Attempting diagnosis email for diagnosis %s to %s', diagnosis_id, recipient_email)
         sent = notify_patient_diagnosis_update(patient, message_text)
         if not sent:
+            logger.error('Failed diagnosis email send for diagnosis %s to %s', diagnosis_id, recipient_email)
             return Response({'error': 'Failed to send email notification to patient.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+        logger.info('Diagnosis email sent for diagnosis %s to %s', diagnosis_id, recipient_email)
         return Response({'message': 'Patient email notification sent successfully'})
 
 
