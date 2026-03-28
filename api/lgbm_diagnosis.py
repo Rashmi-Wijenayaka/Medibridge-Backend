@@ -46,6 +46,16 @@ AREA_MAPPING = {
     'Hormonal':       'Hormone.json',
 }
 
+AREA_ALIASES = {
+    'head': 'Head',
+    'breast': 'Breast',
+    'breasts': 'Breast',
+    'pelvis': 'Pelvis',
+    'urinary system': 'Urinary System',
+    'skin': 'Skin',
+    'hormonal': 'Hormonal',
+}
+
 AREA_DIAGNOSIS_CANDIDATES = {
     'Head': [
         {'name': 'Migraine', 'keywords': ['migraine', 'headache', 'aura', 'photophobia', 'nausea', 'unilateral', 'throbbing']},
@@ -101,6 +111,11 @@ _NEGATIVE_KW = [
 
 def _tokenise(text: str) -> list:
     return [t for t in re.split(r'[^a-z0-9]+', (text or '').lower()) if t]
+
+
+def _normalise_area(area: str) -> str:
+    key = (area or '').strip().lower()
+    return AREA_ALIASES.get(key, (area or '').strip())
 
 
 def _condition_keywords(conditions: list) -> dict:
@@ -316,7 +331,8 @@ def _candidate_diagnosis_scores(area: str, patient_text: str) -> list:
 # ── helpers ────────────────────────────────────────────────────────────────────
 
 def _load_dataset(area: str) -> dict:
-    filename = AREA_MAPPING.get(area)
+    canonical_area = _normalise_area(area)
+    filename = AREA_MAPPING.get(canonical_area)
     if not filename:
         raise ValueError(f"Unknown area of concern: '{area}'")
     path = os.path.join(DATASETS_DIR, filename)
@@ -551,15 +567,17 @@ def _generate_synthetic_data(intents: list, conditions: list,
 # ── model persistence ──────────────────────────────────────────────────────────
 
 def _model_path(area: str) -> str:
-    safe = re.sub(r'[^A-Za-z0-9]', '_', area)
+    canonical_area = _normalise_area(area)
+    safe = re.sub(r'[^A-Za-z0-9]', '_', canonical_area)
     return os.path.join(MODELS_DIR, f'lgbm_{safe}.pkl')
 
 
 def _train_and_save(area: str) -> dict:
-    dataset   = _load_dataset(area)
+    canonical_area = _normalise_area(area)
+    dataset   = _load_dataset(canonical_area)
     intents   = dataset.get('ourIntents', [])
     if not intents:
-        raise ValueError(f"Dataset for '{area}' contains no intents.")
+        raise ValueError(f"Dataset for '{canonical_area}' contains no intents.")
 
     conditions = _conditions_list(intents)
     n_classes  = len(conditions)
@@ -645,7 +663,8 @@ def run_lgbm_diagnosis(qa_pairs: list, area_of_concern: str, scan_files: list | 
         total_questions – total questions in the dataset
         diagnosis_text  – human-readable conclusion string
     """
-    bundle: dict          = _load_model(area_of_concern)
+    canonical_area = _normalise_area(area_of_concern)
+    bundle: dict          = _load_model(canonical_area)
     model: lgb.LGBMClassifier = bundle['model']
     conditions: list      = bundle['conditions']
     intents: list         = bundle['intents']
@@ -672,14 +691,14 @@ def run_lgbm_diagnosis(qa_pairs: list, area_of_concern: str, scan_files: list | 
     top_indices  = np.argsort(proba)[::-1][:top_n]
     lgbm_conditions = [
         {
-            'condition':  _pretty_condition_name(conditions[i], area_of_concern),
+            'condition':  _pretty_condition_name(conditions[i], canonical_area),
             'confidence': round(float(proba[i]) * 100, 1),
         }
         for i in top_indices
     ]
 
     patient_text = _collect_patient_text(qa_pairs, scan_files)
-    concrete_conditions = _candidate_diagnosis_scores(area_of_concern, patient_text)
+    concrete_conditions = _candidate_diagnosis_scores(canonical_area, patient_text)
     top_conditions = concrete_conditions if concrete_conditions else lgbm_conditions
 
     primary_condition = top_conditions[0]['condition'] if top_conditions else 'Inconclusive'
@@ -729,7 +748,7 @@ def run_lgbm_diagnosis(qa_pairs: list, area_of_concern: str, scan_files: list | 
         'positive_clues':   positive_clues,
         'scan_summary':     scan_summary,
         'diagnosis_text':   _build_text(
-            top_conditions, len(pos_qa), area_of_concern,
+            top_conditions, len(pos_qa), canonical_area,
             len(answered), len(qa_pairs),
             positive_clues,
             scan_summary,

@@ -1719,6 +1719,21 @@ class LGBMDiagnosisView(APIView):
         'Hormonal':       'Hormone.json',
     }
 
+    AREA_ALIASES = {
+        'head': 'Head',
+        'breast': 'Breast',
+        'breasts': 'Breast',
+        'pelvis': 'Pelvis',
+        'urinary system': 'Urinary System',
+        'skin': 'Skin',
+        'hormonal': 'Hormonal',
+    }
+
+    @classmethod
+    def _normalize_area(cls, area):
+        key = (area or '').strip().lower()
+        return cls.AREA_ALIASES.get(key, (area or '').strip())
+
     def get(self, request, patient_id):
         if request.user.role != 'admin':
             return Response(
@@ -1727,14 +1742,15 @@ class LGBMDiagnosisView(APIView):
             )
 
         patient = get_object_or_404(Patient, id=patient_id)
+        normalized_area = self._normalize_area(patient.area_of_concern)
 
-        if not patient.area_of_concern or patient.area_of_concern not in self.AREA_MAPPING:
+        if not normalized_area or normalized_area not in self.AREA_MAPPING:
             return Response(
                 {'error': f"Unknown area of concern: '{patient.area_of_concern}'"},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        dataset_filename = self.AREA_MAPPING[patient.area_of_concern]
+        dataset_filename = self.AREA_MAPPING[normalized_area]
         dataset_path = os.path.join(
             os.path.dirname(os.path.dirname(__file__)),
             'Datasets', dataset_filename
@@ -1783,7 +1799,7 @@ class LGBMDiagnosisView(APIView):
 
         try:
             from .lgbm_diagnosis import run_lgbm_diagnosis
-            result = run_lgbm_diagnosis(qa_pairs, patient.area_of_concern, scan_files)
+            result = run_lgbm_diagnosis(qa_pairs, normalized_area, scan_files)
         except Exception as exc:
             logger.error('Diagnosis inference error for patient %s: %s', patient_id, exc)
             return Response(
