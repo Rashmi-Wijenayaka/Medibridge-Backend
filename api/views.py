@@ -846,11 +846,20 @@ class SendEmailView(APIView):
         sent = notify_patient_diagnosis_update(patient, message_text)
         if not sent:
             logger.error('Failed diagnosis email send for diagnosis %s to %s', diagnosis_id, recipient_email)
-            return Response({'error': 'Failed to send email notification to patient.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(
+                {
+                    'message': 'Diagnosis saved, but email could not be delivered right now.',
+                    'email_sent': False,
+                    'recipient_email': recipient_email,
+                    'recipient_patient_id': source_patient.id,
+                },
+                status=status.HTTP_200_OK,
+            )
 
         logger.info('Diagnosis email sent for diagnosis %s to %s', diagnosis_id, recipient_email)
         return Response({
             'message': 'Patient email notification sent successfully',
+            'email_sent': True,
             'recipient_email': recipient_email,
             'recipient_patient_id': source_patient.id,
         })
