@@ -97,14 +97,23 @@ else:
 
 # Email settings (free method)
 # Use SMTP credentials from environment variables.
+EMAIL_DELIVERY_PROVIDER = os.getenv('EMAIL_DELIVERY_PROVIDER', 'smtp').strip().lower()
+
 EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
 EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
 EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
-EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() == 'true'
+EMAIL_USE_SSL = _env_bool('EMAIL_USE_SSL', False)
+EMAIL_USE_TLS = _env_bool('EMAIL_USE_TLS', not EMAIL_USE_SSL) if not EMAIL_USE_SSL else False
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
 EMAIL_TIMEOUT = int(os.getenv('EMAIL_TIMEOUT', '15'))
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER or 'noreply@medibridge.com')
+
+# Resend API settings (recommended on Railway where SMTP can be blocked)
+RESEND_API_KEY = os.getenv('RESEND_API_KEY', '').strip()
+RESEND_API_URL = os.getenv('RESEND_API_URL', 'https://api.resend.com/emails').strip()
+RESEND_FROM_EMAIL = os.getenv('RESEND_FROM_EMAIL', DEFAULT_FROM_EMAIL).strip()
+RESEND_TIMEOUT = int(os.getenv('RESEND_TIMEOUT', '15'))
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
@@ -212,5 +221,8 @@ REST_FRAMEWORK = {
     ],
 }
 
-# Email notifications are active when SMTP credentials are configured.
-EMAIL_NOTIFICATIONS_ENABLED = bool(EMAIL_HOST_USER and EMAIL_HOST_PASSWORD)
+# Email notifications are active when chosen provider is configured.
+if EMAIL_DELIVERY_PROVIDER == 'resend':
+    EMAIL_NOTIFICATIONS_ENABLED = bool(RESEND_API_KEY and RESEND_FROM_EMAIL)
+else:
+    EMAIL_NOTIFICATIONS_ENABLED = bool(EMAIL_HOST_USER and EMAIL_HOST_PASSWORD)
