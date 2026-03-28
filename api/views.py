@@ -37,8 +37,15 @@ from datetime import timedelta
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 import logging
+import threading
 
 logger = logging.getLogger(__name__)
+
+
+def _run_in_background(task, *args, **kwargs):
+    """Run non-critical side effects without delaying API responses."""
+    worker = threading.Thread(target=task, args=args, kwargs=kwargs, daemon=True)
+    worker.start()
 
 
 def _clean_clue_summary_text(summary_text):
@@ -1210,29 +1217,39 @@ class DiagnosisViewSet(viewsets.ModelViewSet):
         except Exception:
             logger.exception('Failed to set visit_count=1 on diagnosis creation')
 
-        # Send email notification to patient about diagnosis update.
-        try:
-            admin_name = self.request.user.first_name or self.request.user.username
-            notify_patient_diagnosis_update(
-                patient,
-                f"Your diagnosis summary from {admin_name} is ready. Log in to your medical chat to view your results."
-            )
-        except Exception as e:
-            logger.warning(f"Failed to send diagnosis email notification: {str(e)}")
+        # Send email notification to patient about diagnosis update without
+        # blocking the main request path.
+        admin_name = self.request.user.first_name or self.request.user.username
+
+        def _notify_create():
+            try:
+                notify_patient_diagnosis_update(
+                    patient,
+                    f"Your diagnosis summary from {admin_name} is ready. Log in to your medical chat to view your results."
+                )
+            except Exception as e:
+                logger.warning(f"Failed to send diagnosis email notification: {str(e)}")
+
+        _run_in_background(_notify_create)
 
     def perform_update(self, serializer):
         diagnosis = serializer.save()
 
-        # Also notify patient when an existing conclusion is edited by admin.
-        try:
-            editor = self.request.user if self.request.user.is_authenticated else None
-            editor_name = (editor.first_name or editor.username) if editor else 'admin'
-            notify_patient_diagnosis_update(
-                diagnosis.patient,
-                f"Your diagnosis summary from {editor_name} has been updated. Log in to your medical chat to view the latest results."
-            )
-        except Exception as e:
-            logger.warning(f"Failed to send diagnosis update email notification: {str(e)}")
+        # Also notify patient when an existing conclusion is edited by admin,
+        # without blocking the API response.
+        editor = self.request.user if self.request.user.is_authenticated else None
+        editor_name = (editor.first_name or editor.username) if editor else 'admin'
+
+        def _notify_update():
+            try:
+                notify_patient_diagnosis_update(
+                    diagnosis.patient,
+                    f"Your diagnosis summary from {editor_name} has been updated. Log in to your medical chat to view the latest results."
+                )
+            except Exception as e:
+                logger.warning(f"Failed to send diagnosis update email notification: {str(e)}")
+
+        _run_in_background(_notify_update)
 
 
 class DoctorMessageViewSet(viewsets.ModelViewSet):
