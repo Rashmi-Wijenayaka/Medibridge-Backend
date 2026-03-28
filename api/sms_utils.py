@@ -46,6 +46,15 @@ def _send_email_notification(recipient_email, subject, message_text):
         return False
 
     try:
+        logger.warning(
+            "SMTP send start: to=%s host=%s port=%s tls=%s timeout=%s from=%s",
+            recipient_email,
+            getattr(settings, 'EMAIL_HOST', ''),
+            getattr(settings, 'EMAIL_PORT', ''),
+            getattr(settings, 'EMAIL_USE_TLS', ''),
+            getattr(settings, 'EMAIL_TIMEOUT', ''),
+            from_email,
+        )
         send_mail(
             subject=subject,
             message=message_text,
@@ -53,10 +62,15 @@ def _send_email_notification(recipient_email, subject, message_text):
             recipient_list=[recipient_email],
             fail_silently=False,
         )
-        logger.info("Email notification sent to %s", recipient_email)
+        logger.warning("SMTP send success: to=%s", recipient_email)
         return True
     except Exception as exc:
-        logger.error("Failed to send email notification to %s: %s", recipient_email, str(exc))
+        logger.error(
+            "SMTP send failed: to=%s error_type=%s error=%s",
+            recipient_email,
+            type(exc).__name__,
+            str(exc),
+        )
         return False
 
 
