@@ -12,6 +12,17 @@ from django.core.mail import send_mail
 logger = logging.getLogger(__name__)
 
 
+def _resolve_patient_email(patient):
+    """Prefer profile email, then fallback to linked user email."""
+    if not patient:
+        return ''
+    profile_email = (getattr(patient, 'email', '') or '').strip()
+    if profile_email:
+        return profile_email
+    linked_user = getattr(patient, 'user', None)
+    return ((getattr(linked_user, 'email', '') or '').strip()) if linked_user else ''
+
+
 def send_sms_notification(phone_number, message_text):
     """
     Compatibility shim retained for older call sites.
@@ -62,8 +73,9 @@ def notify_patient_new_message(patient, sender_name, message_preview=None):
         bool: True if email sent successfully, False otherwise
     """
     
-    if not patient.email:
-        logger.info("No email for patient %s", patient.full_name)
+    recipient_email = _resolve_patient_email(patient)
+    if not recipient_email:
+        logger.warning("Skipping patient message notification: no email for patient %s", patient.full_name)
         return False
 
     # Create message text with optional preview
@@ -76,7 +88,7 @@ def notify_patient_new_message(patient, sender_name, message_preview=None):
         email_text = f"Hi {patient.full_name}, you have a new message from {sender_name}. Log in to your medical chat to view."
 
     return _send_email_notification(
-        patient.email,
+        recipient_email,
         "New message from your care team",
         email_text,
     )
@@ -94,13 +106,14 @@ def notify_patient_diagnosis_update(patient, message_text="Your diagnosis summar
         bool: True if email sent successfully, False otherwise
     """
     
-    if not patient.email:
-        logger.info("No email for patient %s", patient.full_name)
+    recipient_email = _resolve_patient_email(patient)
+    if not recipient_email:
+        logger.warning("Skipping diagnosis notification: no email for patient %s", patient.full_name)
         return False
 
     email_text = f"Hi {patient.full_name}, {message_text}"
     return _send_email_notification(
-        patient.email,
+        recipient_email,
         "Diagnosis update available",
         email_text,
     )
