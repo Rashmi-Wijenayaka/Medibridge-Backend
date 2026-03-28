@@ -1801,7 +1801,7 @@ class LGBMDiagnosisView(APIView):
             from .lgbm_diagnosis import run_lgbm_diagnosis
             result = run_lgbm_diagnosis(qa_pairs, normalized_area, scan_files)
         except Exception as exc:
-            logger.error('Diagnosis inference error for patient %s: %s', patient_id, exc)
+            logger.exception('Diagnosis inference error for patient %s: %s', patient_id, exc)
             return Response(
                 {'error': 'Unable to generate a suggested diagnosis. Please try again or complete the diagnosis manually.'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
