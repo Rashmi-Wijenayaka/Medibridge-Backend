@@ -306,7 +306,9 @@ class PatientLoginView(APIView):
         if not email or not password:
             return Response({'error': 'email and password are required.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        user = User.objects.filter(email__iexact=email, role='patient').first()
+        # Choose newest patient account for this email to stay consistent
+        # with signup behavior and avoid stale-account password mismatches.
+        user = User.objects.filter(email__iexact=email, role='patient').order_by('-id').first()
         if not user:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
@@ -365,7 +367,7 @@ class PatientRequestPasswordResetOTPView(APIView):
         except ValidationError:
             return Response({'error': 'Enter a valid email address.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        user = User.objects.filter(email__iexact=email, role='patient').first()
+        user = User.objects.filter(email__iexact=email, role='patient').order_by('-id').first()
         if not user:
             return Response({'error': 'No patient account found for this email.'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -430,7 +432,7 @@ class PatientVerifyPasswordResetOTPView(APIView):
         if password_error:
             return Response({'error': password_error}, status=status.HTTP_400_BAD_REQUEST)
 
-        user = User.objects.filter(email__iexact=email, role='patient').first()
+        user = User.objects.filter(email__iexact=email, role='patient').order_by('-id').first()
         if not user:
             return Response({'error': 'No patient account found for this email.'}, status=status.HTTP_404_NOT_FOUND)
 
