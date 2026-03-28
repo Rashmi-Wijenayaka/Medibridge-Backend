@@ -1494,9 +1494,26 @@ class ChatbotAPIView(APIView):
         try:
             intents = self._load_patient_intents(patient.area_of_concern)
 
-            conversation = Message.objects.filter(patient=patient).order_by('timestamp')
-            user_messages = [msg for msg in conversation if msg.sender == 'user']
+            conversation = list(Message.objects.filter(patient=patient).order_by('timestamp'))
+
+            # Repeat visits should start a fresh question cycle while preserving
+            # historical messages. Scope progression to messages after the last
+            # completion marker.
+            completion_marker = 'Thank you for completing all the diagnostic questions'
+            last_completion_idx = -1
+            for idx, msg in enumerate(conversation):
+                if (msg.sender == 'bot') and (completion_marker in (msg.text or '')):
+                    last_completion_idx = idx
+
+            active_conversation = conversation[last_completion_idx + 1:]
+            user_messages = [msg for msg in active_conversation if msg.sender == 'user']
             current_question_index = len(user_messages)  # 0-based index of next unanswered question
+
+            # If previous visit already completed and a new message arrives
+            # without explicit edit index, begin a new visit automatically.
+            if raw_question_index in [None, ''] and current_question_index >= len(intents):
+                user_messages = []
+                current_question_index = 0
 
             if raw_question_index in [None, '']:
                 target_question_index = current_question_index
