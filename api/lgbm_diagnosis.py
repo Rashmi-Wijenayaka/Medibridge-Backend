@@ -18,11 +18,20 @@ import json
 import os
 import pickle
 import re
+import logging
 
-import lightgbm as lgb
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+
+try:
+    import lightgbm as lgb
+    LIGHTGBM_IMPORT_ERROR = None
+except Exception as exc:
+    lgb = None
+    LIGHTGBM_IMPORT_ERROR = exc
+
+logger = logging.getLogger(__name__)
 
 # ── paths ──────────────────────────────────────────────────────────────────────
 # This file lives at  backend/api/lgbm_diagnosis.py
@@ -573,6 +582,9 @@ def _model_path(area: str) -> str:
 
 
 def _train_and_save(area: str) -> dict:
+    if lgb is None:
+        raise RuntimeError(f'LightGBM is unavailable: {LIGHTGBM_IMPORT_ERROR}')
+
     canonical_area = _normalise_area(area)
     dataset   = _load_dataset(canonical_area)
     intents   = dataset.get('ourIntents', [])
@@ -664,24 +676,46 @@ def run_lgbm_diagnosis(qa_pairs: list, area_of_concern: str, scan_files: list | 
         diagnosis_text  – human-readable conclusion string
     """
     canonical_area = _normalise_area(area_of_concern)
-    bundle: dict          = _load_model(canonical_area)
-    model: lgb.LGBMClassifier = bundle['model']
-    conditions: list      = bundle['conditions']
-    intents: list         = bundle['intents']
-    n_classes: int        = bundle['n_classes']
+    dataset = _load_dataset(canonical_area)
+    intents = dataset.get('ourIntents', [])
+    if not intents:
+        raise ValueError(f"Dataset for '{canonical_area}' contains no intents.")
+
+    conditions = _conditions_list(intents)
+    n_classes = len(conditions)
+    if n_classes == 0:
+        raise ValueError(f"Dataset for '{canonical_area}' contains no diagnosable conditions.")
 
     scan_summary = _summarize_scan_files(scan_files)
-    vec   = _vectorise(qa_pairs, intents, scan_summary).reshape(1, -1)
-    proba = model.predict_proba(vec)[0]
+    proba = np.zeros(n_classes, dtype=np.float32)
+
+    if lgb is not None:
+        bundle = _load_model(canonical_area)
+        model = bundle['model']
+        vec = _vectorise(qa_pairs, intents, scan_summary).reshape(1, -1)
+        proba = np.array(model.predict_proba(vec)[0], dtype=np.float32)
+    else:
+        logger.warning('LightGBM unavailable, using fallback diagnosis signals only: %s', LIGHTGBM_IMPORT_ERROR)
+
     keyword_proba = _keyword_condition_scores(qa_pairs, conditions, scan_files)
     tfidf_proba = _tfidf_condition_scores(qa_pairs, conditions, scan_files)
 
-    # Hybrid ensemble across three techniques.
-    proba = (
-        (0.70 * np.array(proba, dtype=np.float32))
-        + (0.20 * np.array(keyword_proba, dtype=np.float32))
-        + (0.10 * np.array(tfidf_proba, dtype=np.float32))
-    )
+    # Hybrid ensemble. If LightGBM is unavailable, rely on text/fallback signals.
+    if np.any(proba):
+        proba = (
+            (0.70 * np.array(proba, dtype=np.float32))
+            + (0.20 * np.array(keyword_proba, dtype=np.float32))
+            + (0.10 * np.array(tfidf_proba, dtype=np.float32))
+        )
+    else:
+        proba = (
+            (0.70 * np.array(keyword_proba, dtype=np.float32))
+            + (0.30 * np.array(tfidf_proba, dtype=np.float32))
+        )
+
+    if not np.any(proba):
+        proba = np.ones(n_classes, dtype=np.float32) / float(n_classes)
+
     norm = float(proba.sum())
     if norm > 0:
         proba = proba / norm
